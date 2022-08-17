@@ -1,15 +1,25 @@
 // import axios from 'axios';
+import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { Button, Form } from 'react-bootstrap';
+import { useLocation, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
+import useAuth from '../hooks/index.js';
+import routes from '../routes.js';
 import avatarImages from '../assets/avatar.jpg';
 
-const Login = () => {
+const LoginPage = () => {
+  const auth = useAuth();
   const [authFailed, setAuthFailed] = useState(false);
   const inputRef = useRef();
+  const location = useLocation();
+  const navigate = useNavigate();
   const { t } = useTranslation();
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
 
   const validationSchema = yup.object().shape({
     username: yup
@@ -22,24 +32,34 @@ const Login = () => {
       .required(t('login.required')),
   });
 
-  useEffect(() => {
-    inputRef.current.focus();
-  }, []);
-
   const formik = useFormik({
     initialValues: {
       username: '',
       password: '',
     },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
+      setAuthFailed(false);
+
       try {
-        setAuthFailed(false);
-        console.log(values);
+        const res = await axios.post(routes.loginPath(), values);
+        console.log(res.data);
+        auth.logIn(res.data);
+        const { from } = location.state || { from: { pathname: routes.chatPagePath() } };
+        navigate(from);
       } catch (err) {
-        setAuthFailed(true);
-        inputRef.current.select();
-        console.log(err);
+        console.error(err);
+        if (!err.isAxiosError) {
+          // toast.error(t('errors.unknown'));
+          return;
+        }
+
+        if (err.response?.status === 401) {
+          setAuthFailed(true);
+          inputRef.current.select();
+        } else {
+          // toast.error(t('errors.network'));
+        }
       }
     },
   });
@@ -95,7 +115,7 @@ const Login = () => {
               <div className="text-center">
                 <span>{t('login.newToChat')}</span>
                 {' '}
-                <a href="/signup">{t('login.signup')}</a>
+                <a href={routes.signupPagePath()}>{t('login.signup')}</a>
               </div>
             </div>
           </div>
@@ -105,4 +125,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
