@@ -4,13 +4,14 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import './assets/application.scss';
-import App from './components/App.jsx';
+import init from './init.jsx';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+const app = async () => {
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  const vdom = await init();
+  root.render(<React.StrictMode>{vdom}</React.StrictMode>);
+};
+
+app();
 
 reportWebVitals();

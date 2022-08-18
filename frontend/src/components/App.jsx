@@ -8,13 +8,12 @@ import {
   Navigate,
   useLocation,
 } from 'react-router-dom';
-// import i18next from 'i18next';
-// import { initReactI18next } from 'react-i18next';
-// import resources from '../locales/index.js';
 import AuthContext from '../contexts/index.js';
 import useAuth from '../hooks/index.js';
 
+import Navbar from './Navbar.jsx';
 import LoginPage from './LoginPage.jsx';
+import Chat from './Chat.jsx';
 import NotFoundPage from './NotFoundPage.jsx';
 import routes from '../routes.js';
 
@@ -51,21 +50,16 @@ const ChatPrivateRoute = ({ children }) => {
   const location = useLocation();
 
   return (
-    auth.loggedIn ? children : <Navigate to={routes.loginPagePath()} state={{ from: location }} />
+    auth.user ? children : <Navigate to={routes.loginPagePath()} state={{ from: location }} />
   );
 };
 
 const App = () => {
-  // const defaultlanguage = 'ru';
-  // await i18next.use(initReactI18next).init({
-  //   lng: defaultlanguage,
-  //   debug: false,
-  //   resources,
-  // });
   return (
     <AuthProvider>
       <Router>
         <div className="d-flex flex-column h-100">
+          <Navbar />
           <Routes>
             <Route path={routes.loginPagePath()} element={<LoginPage />} />
             {/* <Route path={routes.signupPagePath()} element={<SignupPage />} /> */}
@@ -74,7 +68,7 @@ const App = () => {
               path={routes.chatPagePath()}
               element={(
                 <ChatPrivateRoute>
-                  {/* <PrivatePage /> */}
+                  <Chat />
                 </ChatPrivateRoute>
               )}
             />
