@@ -33,9 +33,10 @@ export default {
       network: 'Ошибка соединения',
       unknown: 'Неизвестная ошибка',
     },
-    private: {
-      header: 'Скрытая страница!',
-      message: 'Авторизован пользователь: {{username}}',
+    chat: {
+      sendMessage: 'Отправить',
+      channels: 'Каналы',
+      messages: 'Много сообщений',
     },
   },
 };
