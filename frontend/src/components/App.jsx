@@ -1,49 +1,20 @@
 /* eslint-disable arrow-body-style */
-import React, { useState } from 'react';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  // Link,
   Navigate,
   useLocation,
 } from 'react-router-dom';
-import AuthContext from '../contexts/index.js';
-import useAuth from '../hooks/index.js';
+import AuthProvider from '../contexts/AuthContext.jsx';
+import { useAuth } from '../hooks/index.js';
 
 import Navbar from './Navbar.jsx';
 import LoginPage from './LoginPage.jsx';
 import Chat from './Chat.jsx';
 import NotFoundPage from './NotFoundPage.jsx';
 import routes from '../routes.js';
-
-const AuthProvider = ({ children }) => {
-  const currentUser = JSON.parse(localStorage.getItem('user'));
-  const [user, setUser] = useState(currentUser ? { username: currentUser.username } : null);
-
-  const logIn = (userData) => {
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser({ username: userData.username });
-  };
-
-  const logOut = () => {
-    localStorage.removeItem('userId');
-    setUser(null);
-  };
-
-  const getAuthHeader = () => {
-    const userData = JSON.parse(localStorage.getItem('user'));
-    return userData?.token ? { Authorization: `Bearer ${userData.token}` } : {};
-  };
-
-  return (
-    <AuthContext.Provider value={{
-      logIn, logOut, getAuthHeader, user,
-    }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
 
 const ChatPrivateRoute = ({ children }) => {
   const auth = useAuth();

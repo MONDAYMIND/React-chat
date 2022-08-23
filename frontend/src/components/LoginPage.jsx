@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, Form } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import useAuth from '../hooks/index.js';
+import { useAuth } from '../hooks/index.js';
 import routes from '../routes.js';
 import avatarImages from '../assets/avatar.jpg';
 

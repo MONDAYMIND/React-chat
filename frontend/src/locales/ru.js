@@ -34,9 +34,13 @@ export default {
       unknown: 'Неизвестная ошибка',
     },
     chat: {
+      textMessage: 'Введите сообщение...',
+      newMessage: 'Новое сообщение',
       sendMessage: 'Отправить',
       channels: 'Каналы',
-      messages: 'Много сообщений',
+      message_one: '{{count}} сообщениe',
+      message_few: '{{count}} сообщения',
+      message_many: '{{count}} сообщений',
     },
   },
 };
