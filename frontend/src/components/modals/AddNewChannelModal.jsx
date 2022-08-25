@@ -12,7 +12,7 @@ const AddNewChannelModal = ({ onHide }) => {
   const { addNewChannel } = useSocket();
   const inputRef = useRef();
   const [validationError, setValidationError] = useState(null);
-  const [buttonDisabled, setbuttonDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(false);
   const allChannels = useSelector(channelsSelectors.selectAll);
   const allChannelsNames = allChannels.map((channel) => channel.name);
 
@@ -35,7 +35,7 @@ const AddNewChannelModal = ({ onHide }) => {
       name: '',
     },
     onSubmit: async (values) => {
-      setbuttonDisabled(true);
+      setDisabled(true);
       try {
         await validationSchema.validate(values);
         setValidationError(null);
@@ -43,9 +43,8 @@ const AddNewChannelModal = ({ onHide }) => {
         formik.resetForm();
         onHide();
       } catch (err) {
-        console.log(err);
         setValidationError(err.message);
-        setbuttonDisabled(false);
+        setDisabled(false);
       }
     },
   });
@@ -73,14 +72,14 @@ const AddNewChannelModal = ({ onHide }) => {
               isInvalid={!!validationError}
               ref={inputRef}
               className="mb-2"
-              disabled={buttonDisabled}
+              disabled={disabled}
             />
             <Form.Label htmlFor="name" className="visually-hidden">{t('modals.channelName')}</Form.Label>
             <Form.Control.Feedback type="invalid">{validationError}</Form.Control.Feedback>
           </Form.Group>
           <div className="d-flex justify-content-end">
             <Button variant="secondary" className="me-2" onClick={onHide}>{t('modals.canceling')}</Button>
-            <Button type="submit" variant="primary" disabled={buttonDisabled}>{t('modals.sendChannel')}</Button>
+            <Button type="submit" variant="primary" disabled={disabled}>{t('modals.sendChannel')}</Button>
           </div>
         </Form>
       </Modal.Body>

@@ -31,9 +31,7 @@ const ApiProvider = ({ children, socket }) => {
   socket.on('renameChannel', (channel) => {
     dispatch(channelsActions.updateChannel({
       id: channel.id,
-      changes: {
-        name: { ...channel },
-      },
+      changes: { ...channel },
     }));
   });
 

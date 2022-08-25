@@ -9,9 +9,10 @@ import { selectors as channelsSelectors } from '../../slices/channelsSlice.js';
 
 const RenameChannelModal = ({ onHide, currentChannel }) => {
   const { t } = useTranslation();
-  const { addNewChannel } = useSocket();
+  const { renameChannel } = useSocket();
   const inputRef = useRef();
   const [validationError, setValidationError] = useState(null);
+  const [disabled, setDisabled] = useState(false);
   const allChannels = useSelector(channelsSelectors.selectAll);
   const allChannelsNames = allChannels.map((channel) => channel.name);
 
@@ -34,14 +35,16 @@ const RenameChannelModal = ({ onHide, currentChannel }) => {
       name: currentChannel.name,
     },
     onSubmit: async (values) => {
+      setDisabled(true);
       try {
         await validationSchema.validate(values);
         setValidationError(null);
-        addNewChannel(values);
+        renameChannel({ ...currentChannel, name: values.name });
         formik.resetForm();
         onHide();
       } catch (err) {
         setValidationError(err.message);
+        setDisabled(false);
       }
     },
   });
@@ -69,13 +72,14 @@ const RenameChannelModal = ({ onHide, currentChannel }) => {
               isInvalid={!!validationError}
               ref={inputRef}
               className="mb-2"
+              disabled={disabled}
             />
             <Form.Label htmlFor="name" className="visually-hidden">{t('modals.channelName')}</Form.Label>
             <Form.Control.Feedback type="invalid">{validationError}</Form.Control.Feedback>
           </Form.Group>
           <div className="d-flex justify-content-end">
             <Button variant="secondary" className="me-2" onClick={onHide}>{t('modals.canceling')}</Button>
-            <Button type="submit" variant="primary">{t('modals.sendChannel')}</Button>
+            <Button type="submit" variant="primary" disabled={disabled}>{t('modals.sendChannel')}</Button>
           </div>
         </Form>
       </Modal.Body>
