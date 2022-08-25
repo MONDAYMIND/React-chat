@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { ApiContext } from './index.js';
 import { actions as channelsActions } from '../slices/channelsSlice.js';
 import { actions as messagesActions } from '../slices/messagesSlice.js';
+import { actions as userInterfaceActions } from '../slices/userInterfaceSlice.js';
 
 const ApiProvider = ({ children, socket }) => {
   const dispatch = useDispatch();
@@ -10,7 +11,7 @@ const ApiProvider = ({ children, socket }) => {
   const addNewChannel = (channel) => socket.emit('newChannel', channel, (response) => {
     const { status, data } = response;
     if (status === 'ok') {
-      dispatch(channelsActions.switchCurrentChannelId(data.id));
+      dispatch(userInterfaceActions.setCurrentChannelId(data.id));
     } else {
       console.log(response.status);
     }
@@ -48,7 +49,6 @@ const ApiProvider = ({ children, socket }) => {
   });
 
   const addNewMessage = (message) => socket.emit('newMessage', message, (response) => {
-    console.log(message);
     const { status } = response;
     if (status !== 'ok') {
       console.log(status);

@@ -16,6 +16,7 @@ const LoginPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
+
   useEffect(() => {
     inputRef.current.focus();
   }, []);
@@ -39,7 +40,6 @@ const LoginPage = () => {
     validationSchema,
     onSubmit: async (values) => {
       setAuthFailed(false);
-
       try {
         const res = await axios.post(routes.loginPath(), values);
         console.log(res.data);
