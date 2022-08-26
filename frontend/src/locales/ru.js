@@ -24,6 +24,8 @@ export default {
       alreadyExists: 'Такой пользователь уже существует',
       submit: 'Зарегистрироваться',
       header: 'Регистрация',
+      alreadyRegistered: 'Уже зарегистрированы?',
+      login: 'Войти',
     },
     notFound: {
       header: 'Страница не найдена',

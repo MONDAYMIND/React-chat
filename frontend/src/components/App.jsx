@@ -12,6 +12,7 @@ import { useAuth } from '../hooks/index.js';
 
 import Navbar from './Navbar.jsx';
 import LoginPage from './LoginPage.jsx';
+import SignupPage from './SignupPage.jsx';
 import Chat from './Chat.jsx';
 import NotFoundPage from './NotFoundPage.jsx';
 import routes from '../routes.js';
@@ -33,7 +34,7 @@ const App = () => {
           <Navbar />
           <Routes>
             <Route path={routes.loginPagePath()} element={<LoginPage />} />
-            {/* <Route path={routes.signupPagePath()} element={<SignupPage />} /> */}
+            <Route path={routes.signupPagePath()} element={<SignupPage />} />
             <Route path="*" element={<NotFoundPage />} />
             <Route
               path={routes.chatPagePath()}

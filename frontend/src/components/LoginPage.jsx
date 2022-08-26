@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useAuth } from '../hooks/index.js';
 import routes from '../routes.js';
-import avatarImages from '../assets/avatar.jpg';
+import avatarImage from '../assets/avatar.jpg';
 
 const LoginPage = () => {
   const auth = useAuth();
@@ -71,7 +71,7 @@ const LoginPage = () => {
             <div className="card-body row p-5">
               <div className="col-12 col-md-6 d-flex align-items-center justify-content-center">
                 <img
-                  src={avatarImages}
+                  src={avatarImage}
                   className="rounded-circle"
                   alt={t('login.header')}
                 />
