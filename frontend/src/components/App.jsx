@@ -1,5 +1,6 @@
 /* eslint-disable arrow-body-style */
 import React from 'react';
+import { ToastContainer } from 'react-toastify';
 import {
   BrowserRouter as Router,
   Routes,
@@ -47,6 +48,17 @@ const App = () => {
           </Routes>
         </div>
       </Router>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </AuthProvider>
   );
 };

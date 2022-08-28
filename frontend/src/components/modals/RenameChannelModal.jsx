@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +14,7 @@ const RenameChannelModal = ({ onHide, currentChannel }) => {
   const inputRef = useRef();
   const [validationError, setValidationError] = useState(null);
   const [disabled, setDisabled] = useState(false);
+  const notifyChannelRenamed = () => toast.success(t('modals.channelRenamed'));
   const allChannels = useSelector(channelsSelectors.selectAll);
   const allChannelsNames = allChannels.map((channel) => channel.name);
 
@@ -42,6 +44,7 @@ const RenameChannelModal = ({ onHide, currentChannel }) => {
         renameChannel({ ...currentChannel, name: values.name });
         formik.resetForm();
         onHide();
+        notifyChannelRenamed();
       } catch (err) {
         setValidationError(err.message);
         setDisabled(false);

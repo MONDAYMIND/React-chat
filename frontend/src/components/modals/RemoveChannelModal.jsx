@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { Button, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useSocket } from '../../hooks/index.js';
@@ -7,11 +8,14 @@ const RemoveChannelModal = ({ onHide, currentChannel }) => {
   const { t } = useTranslation();
   const { removeChannel } = useSocket();
   const [disabled, setDisabled] = useState(false);
+  const notifyChannelRemoved = () => toast.success(t('modals.channelRemoved'));
+
   const handleClick = () => {
     setDisabled(true);
     try {
       removeChannel(currentChannel);
       onHide();
+      notifyChannelRemoved();
     } catch (e) {
       setDisabled(false);
     }

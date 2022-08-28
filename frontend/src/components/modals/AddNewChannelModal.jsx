@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useSelector } from 'react-redux';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +17,7 @@ const AddNewChannelModal = ({ onHide }) => {
   const [disabled, setDisabled] = useState(false);
   const allChannels = useSelector(channelsSelectors.selectAll);
   const allChannelsNames = allChannels.map((channel) => channel.name);
+  const notifyChannelAdd = () => toast.success(t('modals.channelAdded'));
 
   useEffect(() => {
     inputRef.current.focus();
@@ -42,6 +45,7 @@ const AddNewChannelModal = ({ onHide }) => {
         addNewChannel(values);
         formik.resetForm();
         onHide();
+        notifyChannelAdd();
       } catch (err) {
         setValidationError(err.message);
         setDisabled(false);
