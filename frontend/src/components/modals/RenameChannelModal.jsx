@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { Button, Modal, Form } from 'react-bootstrap';
+import i18next from 'i18next';
 import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
+import filter from 'leo-profanity';
 import { useFormik } from 'formik';
 import { useSocket } from '../../hooks/index.js';
 import { selectors as channelsSelectors } from '../../slices/channelsSlice.js';
@@ -17,6 +19,8 @@ const RenameChannelModal = ({ onHide, currentChannel }) => {
   const notifyChannelRenamed = () => toast.success(t('modals.channelRenamed'));
   const allChannels = useSelector(channelsSelectors.selectAll);
   const allChannelsNames = allChannels.map((channel) => channel.name);
+  const currentLanguage = i18next.logger.options.lng;
+  const obsceneWords = filter.getDictionary(currentLanguage);
 
   useEffect(() => {
     inputRef.current.focus();
@@ -29,7 +33,8 @@ const RenameChannelModal = ({ onHide, currentChannel }) => {
       .required(t('modals.channelNameValidation.required'))
       .min(3, t('modals.channelNameValidation.channelNameConstraints'))
       .max(20, t('modals.channelNameValidation.channelNameConstraints'))
-      .notOneOf(allChannelsNames, t('modals.channelNameValidation.uniqueName')),
+      .notOneOf(allChannelsNames, t('modals.channelNameValidation.uniqueName'))
+      .notOneOf(obsceneWords, t('modals.channelNameValidation.obsceneWord')),
   });
 
   const formik = useFormik({

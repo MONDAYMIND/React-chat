@@ -2,6 +2,7 @@ import React from 'react';
 import { Provider as StoreProvider } from 'react-redux';
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
+import filter from 'leo-profanity';
 
 import SocketProvider from './contexts/ApiContext.jsx';
 import App from './components/App.jsx';
@@ -17,6 +18,8 @@ export default async (socket) => {
       resources,
       fallbackLng: 'ru',
     });
+
+  filter.add(filter.getDictionary('ru'));
 
   const vdom = (
     <StoreProvider store={store}>

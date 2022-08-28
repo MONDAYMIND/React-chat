@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import filter from 'leo-profanity';
 
 import { useAuth } from '../hooks/index.js';
 import { actions as channelsActions, selectors as channelsSelectors } from '../slices/channelsSlice.js';
@@ -118,7 +119,7 @@ const Chat = () => {
             <div id="messages-box" className="chat-messages overflow-auto px-5 ">
               {currentMessages.map(({ author, text, id }) => (
                 <div key={id} className="text-break mb-2">
-                  <b>{author}</b>: {text}
+                  <b>{author}</b>: {filter.clean(text)}
                 </div>
               ))}
             </div>

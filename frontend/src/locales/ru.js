@@ -53,6 +53,7 @@ export default {
         required: 'Обязательное поле',
         channelNameConstraints: 'От 3 до 20 символов',
         uniqueName: 'Должно быть уникальным',
+        obsceneWord: 'Должно быть цензурным',
       },
       addChannel: 'Добавить канал',
       channelName: 'Имя канала',
