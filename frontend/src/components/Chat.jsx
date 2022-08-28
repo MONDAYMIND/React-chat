@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
@@ -29,19 +30,29 @@ const Chat = () => {
   const { t } = useTranslation();
   const { getAuthHeader } = useAuth();
   const dispatch = useDispatch();
+  const [connectionError, setConnectionError] = React.useState(false);
   const [modalShow, setModalShow] = React.useState(false);
   const [currentModalEvent, setCurrentModalEvent] = React.useState({ event: null, channel: null });
+  const notifyConnectionError = () => toast.error(t('errors.network'));
+  const notifyUnknownError = () => toast.error(t('errors.unknown'));
 
   useEffect(() => {
     const fetchContent = async () => {
       try {
         const { data } = await axios.get(routes.dataPath(), { headers: getAuthHeader() });
         const { channels, messages, currentChannelId } = data;
+        setConnectionError(false);
         dispatch(userInterfaceActions.setCurrentChannelId(currentChannelId));
         dispatch(channelsActions.addChannels(channels));
         dispatch(messagesActions.addMessages(messages));
       } catch (err) {
         console.error(err);
+        if (!err.isAxiosError) {
+          notifyUnknownError();
+        } else {
+          setConnectionError(true);
+          notifyConnectionError();
+        }
       }
     };
     fetchContent();
@@ -59,7 +70,13 @@ const Chat = () => {
   const currentMessages = allMessages.filter((message) => message.channelId === currentChannelId);
   const messagesCount = currentMessages.length;
 
-  return (
+  return connectionError ? (
+    <div className="h-100 d-flex justify-content-center align-items-center">
+      <div role="status" className="spinner-border text-primary">
+        <span className="visually-hidden">Загрузка...</span>
+      </div>
+    </div>
+  ) : (
     <Container className="h-100 my-4 overflow-hidden rounded shadow">
       <Row className="h-100 bg-white flex-md-row">
         <Col xs={4} md={2} className="border-end pt-5 px-0 bg-light">

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { Formik, Field, ErrorMessage } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { Button, Form } from 'react-bootstrap';
@@ -15,6 +16,8 @@ const SignupPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const notifyConnectionError = () => toast.error(t('errors.network'));
+  const notifyUnknownError = () => toast.error(t('errors.unknown'));
 
   const validationSchema = yup.object().shape({
     username: yup
@@ -49,13 +52,13 @@ const SignupPage = () => {
       console.log(err);
       console.error(err);
       if (!err.isAxiosError) {
-        // toast.error(t('errors.unknown'));
+        notifyUnknownError();
         return;
       }
       if (err.response?.status === 409) {
         setSignupFailed(true);
       } else {
-        throw err;
+        notifyConnectionError();
       }
     }
   };

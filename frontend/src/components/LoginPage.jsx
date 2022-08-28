@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { Button, Form } from 'react-bootstrap';
@@ -16,6 +17,8 @@ const LoginPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const notifyConnectionError = () => toast.error(t('errors.network'));
+  const notifyUnknownError = () => toast.error(t('errors.unknown'));
 
   useEffect(() => {
     inputRef.current.focus();
@@ -49,15 +52,14 @@ const LoginPage = () => {
       } catch (err) {
         console.error(err);
         if (!err.isAxiosError) {
-          // toast.error(t('errors.unknown'));
+          notifyUnknownError();
           return;
         }
-
         if (err.response?.status === 401) {
           setAuthFailed(true);
           inputRef.current.select();
         } else {
-          // toast.error(t('errors.network'));
+          notifyConnectionError();
         }
       }
     },

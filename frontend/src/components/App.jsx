@@ -19,11 +19,11 @@ import NotFoundPage from './NotFoundPage.jsx';
 import routes from '../routes.js';
 
 const ChatPrivateRoute = ({ children }) => {
-  const auth = useAuth();
+  const { user } = useAuth();
   const location = useLocation();
 
   return (
-    auth.user ? children : <Navigate to={routes.loginPagePath()} state={{ from: location }} />
+    user ? children : <Navigate to={routes.loginPagePath()} state={{ from: location }} />
   );
 };
 
