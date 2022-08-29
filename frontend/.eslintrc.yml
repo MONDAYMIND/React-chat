@@ -6,6 +6,7 @@ parserOptions:
   
 plugins:
   - react
+  - functional
 
 extends:
   - airbnb
