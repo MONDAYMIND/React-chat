@@ -29,8 +29,8 @@ const ChatPrivateRoute = ({ children }) => {
 
 const App = () => {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <div className="d-flex flex-column h-100">
           <Navbar />
           <Routes>
@@ -58,8 +58,8 @@ const App = () => {
           draggable
           pauseOnHover
         />
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 };
 
