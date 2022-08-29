@@ -1,5 +1,4 @@
 import React from 'react';
-import Rollbar from 'rollbar';
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 import { Provider as StoreProvider } from 'react-redux';
 import i18next from 'i18next';
@@ -30,12 +29,10 @@ export default async (socket) => {
     },
   };
 
-  const rollbar = new Rollbar(rollbarConfig);
-
   filter.add(filter.getDictionary('ru'));
 
   const vdom = (
-    <RollbarProvider instance={rollbar} config={rollbarConfig}>
+    <RollbarProvider config={rollbarConfig}>
       <ErrorBoundary>
         <StoreProvider store={store}>
           <I18nextProvider i18n={i18n}>
