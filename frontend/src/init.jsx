@@ -35,7 +35,7 @@ export default async (socket) => {
   filter.add(filter.getDictionary('ru'));
 
   const vdom = (
-    <RollbarProvider instance={rollbar}>
+    <RollbarProvider instance={rollbar} config={rollbarConfig}>
       <ErrorBoundary>
         <StoreProvider store={store}>
           <I18nextProvider i18n={i18n}>
