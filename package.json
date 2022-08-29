@@ -6,7 +6,7 @@
     "node": "17.x",
     "npm": "8.x"
   },
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
     "build": "npm run build --prefix frontend",
     "start": "start-server -s ./frontend/build",

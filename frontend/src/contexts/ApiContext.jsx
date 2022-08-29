@@ -60,7 +60,8 @@ const ApiProvider = ({ children, socket }) => {
   return (
     <ApiContext.Provider value={{
       addNewChannel, renameChannel, removeChannel, addNewMessage,
-    }}>
+    }}
+    >
       {children}
     </ApiContext.Provider>
   );

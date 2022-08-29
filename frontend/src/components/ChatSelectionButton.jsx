@@ -38,7 +38,8 @@ const ChatSelectionButton = ({
           onClick={() => {
             setCurrentModalEvent({ event: 'remove', channel });
             setModalShow(true);
-          }}>
+          }}
+        >
           {t('chat.removeChannel')}
         </Dropdown.Item>
         <Dropdown.Item
@@ -46,7 +47,8 @@ const ChatSelectionButton = ({
           onClick={() => {
             setCurrentModalEvent({ event: 'rename', channel });
             setModalShow(true);
-          }}>
+          }}
+        >
           {t('chat.renameChannel')}
         </Dropdown.Item>
       </Dropdown.Menu>
@@ -60,7 +62,8 @@ const ChatSelectionButton = ({
       data-toggle="tooltip"
       title={name}
     >
-      <span className="me-1">#</span>{name}
+      <span className="me-1">#</span>
+      {name}
     </Button>
   );
 };

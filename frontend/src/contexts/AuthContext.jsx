@@ -15,12 +15,13 @@ const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const getAuthHeader = () => (currentUser?.token ? { Authorization: `Bearer ${currentUser.token}` } : {});
+  const getAuthHeader = () => (currentUser && currentUser.token ? { Authorization: `Bearer ${currentUser.token}` } : {});
 
   return (
     <AuthContext.Provider value={{
       logIn, logOut, getAuthHeader, user,
-    }}>
+    }}
+    >
       {children}
     </AuthContext.Provider>
   );
