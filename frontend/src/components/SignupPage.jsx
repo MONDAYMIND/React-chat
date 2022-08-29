@@ -44,12 +44,10 @@ const SignupPage = () => {
     try {
       const res = await axios
         .post(routes.signupPath(), { username: values.username, password: values.password });
-      console.log(res.data);
       logIn(res.data);
       const { from } = location.state || { from: { pathname: routes.chatPagePath() } };
       navigate(from);
     } catch (err) {
-      console.log(err);
       console.error(err);
       if (!err.isAxiosError) {
         notifyUnknownError();
@@ -153,7 +151,7 @@ const SignupPage = () => {
               <div className="text-center">
                 <span>{t('signup.alreadyRegistered')}</span>
                 {' '}
-                <a href={routes.loginPath()}>{t('signup.login')}</a>
+                <a href={routes.loginPagePath()}>{t('signup.login')}</a>
               </div>
             </div>
           </div>

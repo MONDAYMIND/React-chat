@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const logOut = () => {
-    localStorage.removeItem('userId');
+    localStorage.removeItem('user');
     setUser(null);
   };
 

@@ -8,6 +8,7 @@ import routes from '../routes.js';
 const Navbar = () => {
   const { logOut, user } = useAuth();
   const { t } = useTranslation();
+
   return (
     <BootstrapNavbar bg="white" expand="lg" className="shadow-sm">
       <div className="container">

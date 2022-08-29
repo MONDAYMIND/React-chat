@@ -11,7 +11,7 @@ import routes from '../routes.js';
 import avatarImage from '../assets/avatar.jpg';
 
 const LoginPage = () => {
-  const auth = useAuth();
+  const { logIn } = useAuth();
   const [authFailed, setAuthFailed] = useState(false);
   const inputRef = useRef();
   const location = useLocation();
@@ -45,8 +45,7 @@ const LoginPage = () => {
       setAuthFailed(false);
       try {
         const res = await axios.post(routes.loginPath(), values);
-        console.log(res.data);
-        auth.logIn(res.data);
+        logIn(res.data);
         const { from } = location.state || { from: { pathname: routes.chatPagePath() } };
         navigate(from);
       } catch (err) {
