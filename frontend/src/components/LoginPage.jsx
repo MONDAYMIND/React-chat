@@ -22,7 +22,7 @@ const LoginPage = () => {
   const notifyConnectionError = () => toast.error(t('errors.network'));
   const notifyUnknownError = () => toast.error(t('errors.unknown'));
   const btnClassNames = classNames('w-100 mb-3', {
-    'disabled': !dataLoaded,
+    disabled: !dataLoaded,
   });
 
   useEffect(() => {

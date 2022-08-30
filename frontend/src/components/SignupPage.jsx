@@ -21,9 +21,8 @@ const SignupPage = () => {
   const notifyConnectionError = () => toast.error(t('errors.network'));
   const notifyUnknownError = () => toast.error(t('errors.unknown'));
   const btnClassNames = classNames('w-100', {
-    'disabled': !dataLoaded,
+    disabled: !dataLoaded,
   });
-
 
   const validationSchema = yup.object().shape({
     username: yup
