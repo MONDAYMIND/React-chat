@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, Form } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
+import classNames from 'classnames';
 import { useAuth } from '../hooks/index.js';
 import routes from '../routes.js';
 import avatarImage from '../assets/avatar_1.jpg';
@@ -13,11 +14,16 @@ import avatarImage from '../assets/avatar_1.jpg';
 const SignupPage = () => {
   const { logIn } = useAuth();
   const [signupFailed, setSignupFailed] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const notifyConnectionError = () => toast.error(t('errors.network'));
   const notifyUnknownError = () => toast.error(t('errors.unknown'));
+  const btnClassNames = classNames('w-100', {
+    'disabled': !dataLoaded,
+  });
+
 
   const validationSchema = yup.object().shape({
     username: yup
@@ -41,14 +47,17 @@ const SignupPage = () => {
 
   const onSubmit = async (values) => {
     setSignupFailed(false);
+    setDataLoaded(false);
     try {
       const res = await axios
         .post(routes.signupPath(), { username: values.username, password: values.password });
       logIn(res.data);
+      setDataLoaded(true);
       const { from } = location.state || { from: { pathname: routes.chatPagePath() } };
       navigate(from);
     } catch (err) {
       console.error(err);
+      setDataLoaded(true);
       if (!err.isAxiosError) {
         notifyUnknownError();
         return;
@@ -99,6 +108,7 @@ const SignupPage = () => {
                           : 'form-control'}
                         placeholder={t('signup.usernameConstraints')}
                         autoFocus
+                        disabled={!dataLoaded}
                       />
                       <label htmlFor="username">{t('signup.username')}</label>
                       <ErrorMessage name="username">
@@ -116,6 +126,7 @@ const SignupPage = () => {
                           ? 'form-control is-invalid'
                           : 'form-control'}
                         placeholder={t('signup.passMin')}
+                        disabled={!dataLoaded}
                       />
                       <label htmlFor="password">{t('login.password')}</label>
                       <ErrorMessage name="password">
@@ -135,14 +146,21 @@ const SignupPage = () => {
                             ? 'form-control is-invalid'
                             : 'form-control'
                         }
+                        disabled={!dataLoaded}
                       />
                       <label htmlFor="confirmPassword">{t('signup.confirm')}</label>
                       <ErrorMessage name="confirmPassword">
                         {(message) => <Form.Control.Feedback type="invalid" tooltip>{message}</Form.Control.Feedback>}
                       </ErrorMessage>
-                      {signupFailed && <Form.Control.Feedback type="invalid" tooltip />}
+                      {signupFailed && <Form.Control.Feedback type="invalid" tooltip>{t('signup.alreadyExists')}</Form.Control.Feedback>}
                     </div>
-                    <Button type="submit" variant="outline-primary" className="w-100">{t('signup.submit')}</Button>
+                    <Button
+                      type="submit"
+                      variant="outline-primary"
+                      className={btnClassNames}
+                    >
+                      {t('signup.submit')}
+                    </Button>
                   </Form>
                 )}
               </Formik>

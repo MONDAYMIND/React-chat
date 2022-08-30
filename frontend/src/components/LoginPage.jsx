@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
+import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { Button, Form } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -13,12 +14,16 @@ import avatarImage from '../assets/avatar.jpg';
 const LoginPage = () => {
   const { logIn } = useAuth();
   const [authFailed, setAuthFailed] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(true);
   const inputRef = useRef();
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const notifyConnectionError = () => toast.error(t('errors.network'));
   const notifyUnknownError = () => toast.error(t('errors.unknown'));
+  const btnClassNames = classNames('w-100 mb-3', {
+    'disabled': !dataLoaded,
+  });
 
   useEffect(() => {
     inputRef.current.focus();
@@ -43,19 +48,20 @@ const LoginPage = () => {
     validationSchema,
     onSubmit: async (values) => {
       setAuthFailed(false);
+      setDataLoaded(false);
       try {
         const res = await axios.post(routes.loginPath(), values);
         logIn(res.data);
+        setDataLoaded(true);
         const { from } = location.state || { from: { pathname: routes.chatPagePath() } };
         navigate(from);
       } catch (err) {
         console.error(err);
+        setAuthFailed(true);
+        setDataLoaded(true);
         if (!err.isAxiosError) {
           notifyUnknownError();
-          return;
-        }
-        if (err.response?.status === 401) {
-          setAuthFailed(true);
+        } else if (err.response?.status === 401) {
           inputRef.current.select();
         } else {
           notifyConnectionError();
@@ -90,6 +96,7 @@ const LoginPage = () => {
                     required
                     ref={inputRef}
                     placeholder={t('login.username')}
+                    disabled={!dataLoaded}
                   />
                   <Form.Label htmlFor="username">{t('login.username')}</Form.Label>
                 </Form.Group>
@@ -104,11 +111,18 @@ const LoginPage = () => {
                     isInvalid={authFailed}
                     required
                     placeholder={t('login.password')}
+                    disabled={!dataLoaded}
                   />
                   <Form.Label htmlFor="password">{t('login.password')}</Form.Label>
                   {authFailed && <Form.Control.Feedback type="invalid" tooltip>{t('login.authFailed')}</Form.Control.Feedback>}
                 </Form.Group>
-                <Button type="submit" variant="outline-primary" className="w-100 mb-3">{t('login.submit')}</Button>
+                <Button
+                  type="submit"
+                  variant="outline-primary"
+                  className={btnClassNames}
+                >
+                  {t('login.submit')}
+                </Button>
               </Form>
             </div>
             <div className="card-footer p-4">

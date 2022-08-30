@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import { Container, Row, Col } from 'react-bootstrap';
@@ -31,27 +31,27 @@ const Chat = () => {
   const { t } = useTranslation();
   const { getAuthHeader } = useAuth();
   const dispatch = useDispatch();
-  const [connectionError, setConnectionError] = React.useState(false);
-  const [modalShow, setModalShow] = React.useState(false);
-  const [currentModalEvent, setCurrentModalEvent] = React.useState({ event: null, channel: null });
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [modalShow, setModalShow] = useState(false);
+  const [currentModalEvent, setCurrentModalEvent] = useState({ event: null, channel: null });
   const notifyConnectionError = () => toast.error(t('errors.network'));
   const notifyUnknownError = () => toast.error(t('errors.unknown'));
 
   useEffect(() => {
     const fetchContent = async () => {
+      setDataLoaded(false);
       try {
         const { data } = await axios.get(routes.dataPath(), { headers: getAuthHeader() });
         const { channels, messages, currentChannelId } = data;
-        setConnectionError(false);
         dispatch(userInterfaceActions.setCurrentChannelId(currentChannelId));
         dispatch(channelsActions.addChannels(channels));
         dispatch(messagesActions.addMessages(messages));
+        setDataLoaded(true);
       } catch (err) {
         console.error(err);
         if (!err.isAxiosError) {
           notifyUnknownError();
         } else {
-          setConnectionError(true);
           notifyConnectionError();
         }
       }
@@ -71,7 +71,7 @@ const Chat = () => {
   const currentMessages = allMessages.filter((message) => message.channelId === currentChannelId);
   const messagesCount = currentMessages.length;
 
-  return connectionError ? (
+  return !dataLoaded ? (
     <div className="h-100 d-flex justify-content-center align-items-center">
       <div role="status" className="spinner-border text-primary">
         <span className="visually-hidden">{t('loading')}</span>
