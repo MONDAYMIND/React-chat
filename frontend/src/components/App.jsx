@@ -7,6 +7,7 @@ import {
   Route,
   Navigate,
   useLocation,
+  Outlet,
 } from 'react-router-dom';
 import AuthProvider from '../contexts/AuthContext.jsx';
 import { useAuth } from '../hooks/index.js';
@@ -18,13 +19,16 @@ import Chat from './Chat.jsx';
 import NotFoundPage from './NotFoundPage.jsx';
 import routes from '../routes.js';
 
-const ChatPrivateRoute = ({ children }) => {
+const PrivateRoute = ({ direction }) => {
   const { user } = useAuth();
   const location = useLocation();
 
-  return (
-    user ? children : <Navigate to={routes.loginPagePath()} state={{ from: location }} />
-  );
+  if (direction === 'chat') {
+    return user ? <Outlet /> : <Navigate to={routes.loginPagePath()} state={{ from: location }} />;
+  }
+  if (direction === 'login' || direction === 'signup') {
+    return user ? <Navigate to={routes.chatPagePath()} state={{ from: location }} /> : <Outlet />;
+  }
 };
 
 const App = () => {
@@ -34,17 +38,16 @@ const App = () => {
         <div className="d-flex flex-column h-100">
           <Navbar />
           <Routes>
-            <Route path={routes.loginPagePath()} element={<LoginPage />} />
-            <Route path={routes.signupPagePath()} element={<SignupPage />} />
+            <Route path={routes.loginPagePath()} element={<PrivateRoute direction="login" />}>
+              <Route path="" element={<LoginPage />} />
+            </Route>
+            <Route path={routes.signupPagePath()} element={<PrivateRoute direction="signup" />}>
+              <Route path="" element={<SignupPage />} />
+            </Route>
             <Route path="*" element={<NotFoundPage />} />
-            <Route
-              path={routes.chatPagePath()}
-              element={(
-                <ChatPrivateRoute>
-                  <Chat />
-                </ChatPrivateRoute>
-              )}
-            />
+            <Route path={routes.chatPagePath()} element={<PrivateRoute direction="chat" />}>
+              <Route path="" element={<Chat />} />
+            </Route>
           </Routes>
         </div>
         <ToastContainer
