@@ -1,7 +1,7 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.0",
-  "description": "[![Actions Status](https://github.com/MONDAYMIND/frontend-project-lvl4/workflows/hexlet-check/badge.svg)](https://github.com/MONDAYMIND/frontend-project-lvl4/actions)",
+  "description": "My react project",
   "engines": {
     "node": "17.x",
     "npm": "8.x"
@@ -25,5 +25,12 @@
   "homepage": "https://github.com/MONDAYMIND/frontend-project-lvl4#readme",
   "dependencies": {
     "@hexlet/chat-server": "^1.1.6"
+  },
+  "devDependencies": {
+    "eslint": "^8.23.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-react": "^7.31.1",
+    "eslint-plugin-react-hooks": "^4.6.0"
   }
 }

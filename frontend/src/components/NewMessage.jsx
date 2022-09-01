@@ -12,7 +12,7 @@ const NewMessage = ({ channelId }) => {
 
   useEffect(() => {
     inputRef.current.focus();
-  }, []);
+  });
 
   const formik = useFormik({
     initialValues: {

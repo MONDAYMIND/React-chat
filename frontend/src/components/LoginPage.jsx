@@ -33,11 +33,11 @@ const LoginPage = () => {
     username: yup
       .string()
       .trim()
-      .required(t('login.required')),
+      .required(),
     password: yup
       .string()
       .trim()
-      .required(t('login.required')),
+      .required(),
   });
 
   const formik = useFormik({

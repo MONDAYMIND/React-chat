@@ -29,6 +29,7 @@ const getCurrentModal = (eventKey) => {
 
 const Chat = () => {
   const { t } = useTranslation();
+  // const messagesEndRef = useRef(null);
   const { getAuthHeader } = useAuth();
   const dispatch = useDispatch();
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -62,6 +63,7 @@ const Chat = () => {
   const switchChannel = (e) => {
     dispatch(userInterfaceActions.setCurrentChannelId(Number(e.target.id)));
   };
+
   const ModalComponent = getCurrentModal(currentModalEvent.event);
   const allChannels = useSelector(channelsSelectors.selectAll);
   const { currentChannelId } = useSelector((state) => state.userInterface);
@@ -70,6 +72,10 @@ const Chat = () => {
   const allMessages = useSelector(messagesSelectors.selectAll);
   const currentMessages = allMessages.filter((message) => message.channelId === currentChannelId);
   const messagesCount = currentMessages.length;
+
+  // useEffect(() => {
+  //   messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+  // }, [currentMessages]);
 
   return !dataLoaded ? (
     <div className="h-100 d-flex justify-content-center align-items-center">
@@ -123,7 +129,7 @@ const Chat = () => {
               </p>
               <span className="text-muted">{t('chat.message', { count: messagesCount })}</span>
             </div>
-            <div id="messages-box" className="chat-messages overflow-auto px-5 ">
+            <div id="messages-box" className="chat-messages overflow-auto px-5">
               {currentMessages.map(({ author, text, id }) => (
                 <div key={id} className="text-break mb-2">
                   <b>{author}</b>
@@ -132,6 +138,7 @@ const Chat = () => {
                   {filter.clean(text)}
                 </div>
               ))}
+              {/*<div ref={messagesEndRef} />*/}
             </div>
             <NewMessage channelId={currentChannel?.id} />
           </div>

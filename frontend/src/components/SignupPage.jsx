@@ -28,19 +28,19 @@ const SignupPage = () => {
     username: yup
       .string()
       .trim()
-      .required(t('signup.required'))
-      .min(3, t('signup.usernameConstraints'))
-      .max(20, t('signup.usernameConstraints')),
+      .required('signup.required')
+      .min(3, 'signup.usernameConstraints')
+      .max(20, 'signup.usernameConstraints'),
     password: yup
       .string()
       .trim()
-      .required(t('signup.required'))
-      .min(6, t('signup.passMin')),
+      .required('signup.required')
+      .min(6, 'signup.passMin'),
     confirmPassword: yup
       .string()
       .oneOf(
         [yup.ref('password'), null],
-        t('signup.mustMatch'),
+        'signup.mustMatch',
       ),
   });
 
@@ -111,7 +111,7 @@ const SignupPage = () => {
                       />
                       <label htmlFor="username">{t('signup.username')}</label>
                       <ErrorMessage name="username">
-                        {(message) => <Form.Control.Feedback type="invalid" tooltip>{message}</Form.Control.Feedback>}
+                        {(message) => <Form.Control.Feedback type="invalid" tooltip>{t(message)}</Form.Control.Feedback>}
                       </ErrorMessage>
                       {signupFailed && <Form.Control.Feedback type="invalid" tooltip />}
                     </div>
@@ -129,7 +129,7 @@ const SignupPage = () => {
                       />
                       <label htmlFor="password">{t('login.password')}</label>
                       <ErrorMessage name="password">
-                        {(message) => <Form.Control.Feedback type="invalid" tooltip>{message}</Form.Control.Feedback>}
+                        {(message) => <Form.Control.Feedback type="invalid" tooltip>{t(message)}</Form.Control.Feedback>}
                       </ErrorMessage>
                       {signupFailed && <Form.Control.Feedback type="invalid" tooltip />}
                     </div>
@@ -149,7 +149,7 @@ const SignupPage = () => {
                       />
                       <label htmlFor="confirmPassword">{t('signup.confirm')}</label>
                       <ErrorMessage name="confirmPassword">
-                        {(message) => <Form.Control.Feedback type="invalid" tooltip>{message}</Form.Control.Feedback>}
+                        {(message) => <Form.Control.Feedback type="invalid" tooltip>{t(message)}</Form.Control.Feedback>}
                       </ErrorMessage>
                       {signupFailed && <Form.Control.Feedback type="invalid" tooltip>{t('signup.alreadyExists')}</Form.Control.Feedback>}
                     </div>

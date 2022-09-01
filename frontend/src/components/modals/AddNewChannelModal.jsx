@@ -15,7 +15,7 @@ const AddNewChannelModal = ({ onHide }) => {
   const { t } = useTranslation();
   const { addNewChannel } = useSocket();
   const inputRef = useRef();
-  const [validationError, setValidationError] = useState(null);
+  const [validationErrorKey, setValidationErrorKey] = useState(null);
   const [disabled, setDisabled] = useState(false);
   const allChannels = useSelector(channelsSelectors.selectAll);
   const allChannelsNames = allChannels.map((channel) => channel.name);
@@ -31,11 +31,11 @@ const AddNewChannelModal = ({ onHide }) => {
     name: yup
       .string()
       .trim()
-      .required(t('modals.channelNameValidation.required'))
-      .min(3, t('modals.channelNameValidation.channelNameConstraints'))
-      .max(20, t('modals.channelNameValidation.channelNameConstraints'))
-      .notOneOf(allChannelsNames, t('modals.channelNameValidation.uniqueName'))
-      .notOneOf(obsceneWords, t('modals.channelNameValidation.obsceneWord')),
+      .required('modals.channelNameValidation.required')
+      .min(3, 'modals.channelNameValidation.channelNameConstraints')
+      .max(20, 'modals.channelNameValidation.channelNameConstraints')
+      .notOneOf(allChannelsNames, 'modals.channelNameValidation.uniqueName')
+      .notOneOf(obsceneWords, 'modals.channelNameValidation.obsceneWord'),
   });
 
   const formik = useFormik({
@@ -46,13 +46,13 @@ const AddNewChannelModal = ({ onHide }) => {
       setDisabled(true);
       try {
         await validationSchema.validate(values);
-        setValidationError(null);
+        setValidationErrorKey(null);
         addNewChannel(values);
         formik.resetForm();
         onHide();
         notifyChannelAdd();
       } catch (err) {
-        setValidationError(err.message);
+        setValidationErrorKey(err.message);
         setDisabled(false);
       }
     },
@@ -78,13 +78,13 @@ const AddNewChannelModal = ({ onHide }) => {
               value={formik.values.name}
               name="name"
               id="name"
-              isInvalid={!!validationError}
+              isInvalid={!!validationErrorKey}
               ref={inputRef}
               className="mb-2"
               disabled={disabled}
             />
             <Form.Label htmlFor="name" className="visually-hidden">{t('modals.channelName')}</Form.Label>
-            <Form.Control.Feedback type="invalid">{validationError}</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">{t(validationErrorKey)}</Form.Control.Feedback>
           </Form.Group>
           <div className="d-flex justify-content-end">
             <Button variant="secondary" className="me-2" onClick={onHide}>{t('modals.canceling')}</Button>

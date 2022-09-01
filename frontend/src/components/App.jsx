@@ -26,9 +26,7 @@ const PrivateRoute = ({ direction }) => {
   if (direction === 'chat') {
     return user ? <Outlet /> : <Navigate to={routes.loginPagePath()} state={{ from: location }} />;
   }
-  if (direction === 'login' || direction === 'signup') {
-    return user ? <Navigate to={routes.chatPagePath()} state={{ from: location }} /> : <Outlet />;
-  }
+  return user ? <Navigate to={routes.chatPagePath()} state={{ from: location }} /> : <Outlet />;
 };
 
 const App = () => {

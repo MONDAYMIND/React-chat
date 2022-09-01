@@ -14,7 +14,7 @@ const RenameChannelModal = ({ onHide, currentChannel }) => {
   const { t } = useTranslation();
   const { renameChannel } = useSocket();
   const inputRef = useRef();
-  const [validationError, setValidationError] = useState(null);
+  const [validationErrorKey, setValidationErrorKey] = useState(null);
   const [disabled, setDisabled] = useState(false);
   const notifyChannelRenamed = () => toast.success(t('modals.channelRenamed'));
   const allChannels = useSelector(channelsSelectors.selectAll);
@@ -30,11 +30,11 @@ const RenameChannelModal = ({ onHide, currentChannel }) => {
     name: yup
       .string()
       .trim()
-      .required(t('modals.channelNameValidation.required'))
-      .min(3, t('modals.channelNameValidation.channelNameConstraints'))
-      .max(20, t('modals.channelNameValidation.channelNameConstraints'))
-      .notOneOf(allChannelsNames, t('modals.channelNameValidation.uniqueName'))
-      .notOneOf(obsceneWords, t('modals.channelNameValidation.obsceneWord')),
+      .required('modals.channelNameValidation.required')
+      .min(3, 'modals.channelNameValidation.channelNameConstraints')
+      .max(20, 'modals.channelNameValidation.channelNameConstraints')
+      .notOneOf(allChannelsNames, 'modals.channelNameValidation.uniqueName')
+      .notOneOf(obsceneWords, 'modals.channelNameValidation.obsceneWord'),
   });
 
   const formik = useFormik({
@@ -45,13 +45,13 @@ const RenameChannelModal = ({ onHide, currentChannel }) => {
       setDisabled(true);
       try {
         await validationSchema.validate(values);
-        setValidationError(null);
+        setValidationErrorKey(null);
         renameChannel({ ...currentChannel, name: values.name });
         formik.resetForm();
         onHide();
         notifyChannelRenamed();
       } catch (err) {
-        setValidationError(err.message);
+        setValidationErrorKey(err.message);
         setDisabled(false);
       }
     },
@@ -77,13 +77,13 @@ const RenameChannelModal = ({ onHide, currentChannel }) => {
               value={formik.values.name}
               name="name"
               id="name"
-              isInvalid={!!validationError}
+              isInvalid={!!validationErrorKey}
               ref={inputRef}
               className="mb-2"
               disabled={disabled}
             />
             <Form.Label htmlFor="name" className="visually-hidden">{t('modals.channelName')}</Form.Label>
-            <Form.Control.Feedback type="invalid">{validationError}</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">{t(validationErrorKey)}</Form.Control.Feedback>
           </Form.Group>
           <div className="d-flex justify-content-end">
             <Button variant="secondary" className="me-2" onClick={onHide}>{t('modals.canceling')}</Button>
