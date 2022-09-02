@@ -8,7 +8,7 @@ import * as yup from 'yup';
 import filter from 'leo-profanity';
 import { useFormik } from 'formik';
 import { useSocket } from '../../hooks/index.js';
-import { selectors as channelsSelectors } from '../../slices/channelsSlice.js';
+import { getChannels } from '../../slices/channelsSlice.js';
 
 const RenameChannelModal = ({ onHide, currentChannel }) => {
   const { t } = useTranslation();
@@ -17,7 +17,7 @@ const RenameChannelModal = ({ onHide, currentChannel }) => {
   const [validationErrorKey, setValidationErrorKey] = useState(null);
   const [disabled, setDisabled] = useState(false);
   const notifyChannelRenamed = () => toast.success(t('modals.channelRenamed'));
-  const allChannels = useSelector(channelsSelectors.selectAll);
+  const allChannels = useSelector(getChannels);
   const allChannelsNames = allChannels.map((channel) => channel.name);
   const currentLanguage = i18next.logger.options.lng;
   const obsceneWords = filter.getDictionary(currentLanguage);

@@ -5,20 +5,14 @@ import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import filter from 'leo-profanity';
 
-import SocketProvider from './contexts/ApiContext.jsx';
+import ApiProvider from './contexts/ApiContext.jsx';
+import initSocketApi from './socketApi.js';
 import App from './components/App.jsx';
 import store from './slices/index.js';
 import resources from './locales/index.js';
 
-export default async (socket) => {
-  const i18n = i18next.createInstance();
-
-  await i18n
-    .use(initReactI18next)
-    .init({
-      resources,
-      fallbackLng: 'ru',
-    });
+const init = async (socket) => {
+  const api = initSocketApi(socket);
 
   const rollbarConfig = {
     accessToken: process.env.REACT_APP_ACCESS_TOKEN,
@@ -29,17 +23,25 @@ export default async (socket) => {
     },
   };
 
+  const i18n = i18next.createInstance();
+  await i18n
+    .use(initReactI18next)
+    .init({
+      resources,
+      fallbackLng: 'ru',
+    });
+
   filter.add(filter.getDictionary('ru'));
 
   const vdom = (
     <RollbarProvider config={rollbarConfig}>
       <ErrorBoundary>
         <StoreProvider store={store}>
-          <I18nextProvider i18n={i18n}>
-            <SocketProvider socket={socket}>
+          <ApiProvider socketApi={api}>
+            <I18nextProvider i18n={i18n}>
               <App />
-            </SocketProvider>
-          </I18nextProvider>
+            </I18nextProvider>
+          </ApiProvider>
         </StoreProvider>
       </ErrorBoundary>
     </RollbarProvider>
@@ -47,3 +49,5 @@ export default async (socket) => {
 
   return vdom;
 };
+
+export default init;

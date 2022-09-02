@@ -9,7 +9,7 @@ import filter from 'leo-profanity';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useSocket } from '../../hooks/index.js';
-import { selectors as channelsSelectors } from '../../slices/channelsSlice.js';
+import { getChannels } from '../../slices/channelsSlice.js';
 
 const AddNewChannelModal = ({ onHide }) => {
   const { t } = useTranslation();
@@ -17,7 +17,7 @@ const AddNewChannelModal = ({ onHide }) => {
   const inputRef = useRef();
   const [validationErrorKey, setValidationErrorKey] = useState(null);
   const [disabled, setDisabled] = useState(false);
-  const allChannels = useSelector(channelsSelectors.selectAll);
+  const allChannels = useSelector(getChannels);
   const allChannelsNames = allChannels.map((channel) => channel.name);
   const currentLanguage = i18next.logger.options.lng;
   const obsceneWords = filter.getDictionary(currentLanguage);

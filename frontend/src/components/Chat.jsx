@@ -1,5 +1,4 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import { Container, Row, Col } from 'react-bootstrap';
@@ -7,10 +6,9 @@ import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
 
 import { useAuth } from '../hooks/index.js';
-import { actions as channelsActions, selectors as channelsSelectors } from '../slices/channelsSlice.js';
-import { actions as messagesActions, selectors as messagesSelectors } from '../slices/messagesSlice.js';
-import { actions as userInterfaceActions } from '../slices/userInterfaceSlice.js';
-import routes from '../routes.js';
+import { fetchContent, fetchingError, getChannels } from '../slices/channelsSlice.js';
+import { getMessages } from '../slices/messagesSlice.js';
+import { getCurrentChannelId, setCurrentChannelId } from '../slices/userInterfaceSlice.js';
 
 import NewMessage from './NewMessage.jsx';
 import ChatSelectionButton from './ChatSelectionButton.jsx';
@@ -29,55 +27,37 @@ const getCurrentModal = (eventKey) => {
 
 const Chat = () => {
   const { t } = useTranslation();
-  // const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef();
   const { getAuthHeader } = useAuth();
   const dispatch = useDispatch();
-  const [dataLoaded, setDataLoaded] = useState(false);
   const [modalShow, setModalShow] = useState(false);
   const [currentModalEvent, setCurrentModalEvent] = useState({ event: null, channel: null });
-  const notifyConnectionError = () => toast.error(t('errors.network'));
-  const notifyUnknownError = () => toast.error(t('errors.unknown'));
 
   useEffect(() => {
-    const fetchContent = async () => {
-      setDataLoaded(false);
-      try {
-        const { data } = await axios.get(routes.dataPath(), { headers: getAuthHeader() });
-        const { channels, messages, currentChannelId } = data;
-        dispatch(userInterfaceActions.setCurrentChannelId(currentChannelId));
-        dispatch(channelsActions.addChannels(channels));
-        dispatch(messagesActions.addMessages(messages));
-        setDataLoaded(true);
-      } catch (err) {
-        console.error(err);
-        if (!err.isAxiosError) {
-          notifyUnknownError();
-        } else {
-          notifyConnectionError();
-        }
-      }
-    };
-    fetchContent();
-  }, []);
+    dispatch(fetchContent(getAuthHeader()));
+  }, [dispatch, getAuthHeader]);
 
   const switchChannel = (e) => {
-    dispatch(userInterfaceActions.setCurrentChannelId(Number(e.target.id)));
+    dispatch(setCurrentChannelId(Number(e.target.id)));
   };
 
   const ModalComponent = getCurrentModal(currentModalEvent.event);
-  const allChannels = useSelector(channelsSelectors.selectAll);
-  const { currentChannelId } = useSelector((state) => state.userInterface);
+  const loadingError = useSelector(fetchingError);
+  if (loadingError) {
+    loadingError.name === 'AxiosError' ? toast.error(t('errors.network')) : toast.error(t('errors.unknown'));
+  }
+
+  const allChannels = useSelector(getChannels);
+  const currentChannelId = useSelector(getCurrentChannelId);
   const currentChannel = allChannels.find((channel) => channel.id === currentChannelId);
-
-  const allMessages = useSelector(messagesSelectors.selectAll);
+  const allMessages = useSelector(getMessages);
   const currentMessages = allMessages.filter((message) => message.channelId === currentChannelId);
-  const messagesCount = currentMessages.length;
 
-  // useEffect(() => {
-  //   messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-  // }, [currentMessages]);
+  useEffect(() => {
+    messagesEndRef.current.scrollIntoView();
+  }, [currentMessages]);
 
-  return !dataLoaded ? (
+  return loadingError ? (
     <div className="h-100 d-flex justify-content-center align-items-center">
       <div role="status" className="spinner-border text-primary">
         <span className="visually-hidden">{t('loading')}</span>
@@ -127,7 +107,7 @@ const Chat = () => {
                   {currentChannel?.name}
                 </b>
               </p>
-              <span className="text-muted">{t('chat.message', { count: messagesCount })}</span>
+              <span className="text-muted">{t('chat.message', { count: currentMessages.length })}</span>
             </div>
             <div id="messages-box" className="chat-messages overflow-auto px-5">
               {currentMessages.map(({ author, text, id }) => (
@@ -138,7 +118,7 @@ const Chat = () => {
                   {filter.clean(text)}
                 </div>
               ))}
-              {/*<div ref={messagesEndRef} />*/}
+              <div ref={messagesEndRef} />
             </div>
             <NewMessage channelId={currentChannel?.id} />
           </div>

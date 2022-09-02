@@ -1,16 +1,17 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import {
   Dropdown, Button, ButtonGroup,
 } from 'react-bootstrap';
+import { getCurrentChannelId } from '../slices/userInterfaceSlice.js';
 
 const ChatSelectionButton = ({
   channel, switchChannel, setCurrentModalEvent, setModalShow,
 }) => {
   const { id, name, removable } = channel;
   const { t } = useTranslation();
-  const { currentChannelId } = useSelector((state) => state.userInterface);
+  const currentChannelId = useSelector(getCurrentChannelId);
   const variant = id === currentChannelId ? 'secondary' : 'none';
 
   return removable ? (

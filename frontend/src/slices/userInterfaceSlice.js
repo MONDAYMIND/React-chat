@@ -22,6 +22,6 @@ const userInterfaceSlice = createSlice({
   },
 });
 
-export const { actions } = userInterfaceSlice;
+export const { setCurrentChannelId } = userInterfaceSlice.actions;
 export default userInterfaceSlice.reducer;
-export const selectors = uiAdapter.getSelectors((state) => state.userInterface);
+export const getCurrentChannelId = (state) => state.userInterface.currentChannelId;
