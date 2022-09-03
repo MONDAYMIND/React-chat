@@ -24,12 +24,11 @@ const RenameChannelModal = () => {
   const [disabled, setDisabled] = useState(false);
 
   const isModalShown = !!useSelector(getCurrentModalType);
-  const channel = useSelector(getChannelForModal);
+  const currentChannel = useSelector(getChannelForModal);
   const allChannels = useSelector(getChannels);
   const allChannelsNames = allChannels.map((channel) => channel.name);
   const currentLanguage = i18next.logger.options.lng;
   const obsceneWords = filter.getDictionary(currentLanguage);
-  const notifyChannelRenamed = () => toast.success(t('modals.channelRenamed'));
 
   useEffect(() => {
     inputRef.current.focus();
@@ -48,17 +47,17 @@ const RenameChannelModal = () => {
 
   const formik = useFormik({
     initialValues: {
-      name: channel.name,
+      name: currentChannel.name,
     },
     onSubmit: async (values) => {
       setDisabled(true);
       try {
         await validationSchema.validate(values);
         setValidationErrorKey(null);
-        renameChannel({ ...channel, name: values.name });
+        renameChannel({ ...currentChannel, name: values.name });
         formik.resetForm();
         dispatch(userInterfaceActions.hideModal());
-        notifyChannelRenamed();
+        toast.success(t('modals.channelRenamed'));
       } catch (err) {
         setValidationErrorKey(err.message);
         setDisabled(false);

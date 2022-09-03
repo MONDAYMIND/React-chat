@@ -17,14 +17,13 @@ const RemoveChannelModal = () => {
   const channel = useSelector(getChannelForModal);
   const dispatch = useDispatch();
   const [disabled, setDisabled] = useState(false);
-  const notifyChannelRemoved = () => toast.success(t('modals.channelRemoved'));
 
   const handleClick = () => {
     setDisabled(true);
     try {
       removeChannel(channel);
       dispatch(userInterfaceActions.hideModal());
-      notifyChannelRemoved();
+      toast.success(t('modals.channelRemoved'));
     } catch (e) {
       setDisabled(false);
     }

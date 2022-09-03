@@ -6,7 +6,7 @@ import {
 } from 'react-bootstrap';
 import { getCurrentChannelId, actions as userInterfaceActions } from '../slices/userInterfaceSlice.js';
 
-const ChatSelectionButton = ({ channel, switchChannel }) => {
+const ChannelSelectionButton = ({ channel, switchChannel }) => {
   const { id, name, removable } = channel;
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -64,4 +64,4 @@ const ChatSelectionButton = ({ channel, switchChannel }) => {
   );
 };
 
-export default ChatSelectionButton;
+export default ChannelSelectionButton;

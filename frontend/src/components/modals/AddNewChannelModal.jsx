@@ -25,7 +25,6 @@ const AddNewChannelModal = () => {
   const allChannelsNames = allChannels.map((channel) => channel.name);
   const currentLanguage = i18next.logger.options.lng;
   const obsceneWords = filter.getDictionary(currentLanguage);
-  const notifyChannelAdd = () => toast.success(t('modals.channelAdded'));
 
   useEffect(() => {
     inputRef.current.focus();
@@ -54,7 +53,7 @@ const AddNewChannelModal = () => {
         addNewChannel(values);
         formik.resetForm();
         dispatch(userInterfaceActions.hideModal());
-        notifyChannelAdd();
+        toast.success(t('modals.channelAdded'));
       } catch (err) {
         setValidationErrorKey(err.message);
         setDisabled(false);

@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice, createEntityAdapter } from '@reduxjs/too
 import routes from '../routes.js';
 
 const channelsAdapter = createEntityAdapter();
-const initialState = channelsAdapter.getInitialState({ error: null, status: null });
+const initialState = channelsAdapter.getInitialState({ fetchingError: null, status: null });
 
 export const fetchContent = createAsyncThunk(
   'fetchContent',

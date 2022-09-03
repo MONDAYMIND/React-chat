@@ -35,7 +35,7 @@ const userInterfaceSlice = createSlice({
   },
 });
 
-export const actions = userInterfaceSlice.actions;
+export const { actions } = userInterfaceSlice;
 export default userInterfaceSlice.reducer;
 export const getCurrentChannelId = (state) => state.userInterface.currentChannelId;
 export const getCurrentModalType = (state) => state.userInterface.currentModalType;
