@@ -5,16 +5,9 @@ import { Container, Row } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/index.js';
 
-import {
-  fetchContent,
-  fetchingError,
-  fetchingStatus,
-} from '../slices/channelsSlice.js';
+import { fetchContent, fetchingError, fetchingStatus } from '../slices/channelsSlice.js';
 import { getMessages } from '../slices/messagesSlice.js';
-import {
-  getCurrentChannelId,
-  getCurrentModalType,
-} from '../slices/userInterfaceSlice.js';
+import { getCurrentChannelId, getCurrentModalType } from '../slices/userInterfaceSlice.js';
 
 import Channels from './Channels.jsx';
 import Messages from './Messages.jsx';
@@ -44,13 +37,14 @@ const Chat = () => {
     dispatch(fetchContent(getAuthHeader()));
   }, [dispatch, getAuthHeader]);
 
+
   const currentModalType = useSelector(getCurrentModalType);
   const ModalComponent = getCurrentModal(currentModalType);
   const loadingStatus = useSelector(fetchingStatus);
   const loadingError = useSelector(fetchingError);
   if (loadingError?.name) {
     if (loadingError.name === 'AxiosError') {
-        toast.error(t('errors.network'));
+      toast.error(t('errors.network'));
     } if (loadingError.name !== 'AxiosError') {
       toast.error(t('errors.unknown'));
     }
