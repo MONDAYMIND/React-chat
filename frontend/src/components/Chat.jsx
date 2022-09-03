@@ -37,7 +37,6 @@ const Chat = () => {
     dispatch(fetchContent(getAuthHeader()));
   }, [dispatch, getAuthHeader]);
 
-
   const currentModalType = useSelector(getCurrentModalType);
   const ModalComponent = getCurrentModal(currentModalType);
   const loadingStatus = useSelector(fetchingStatus);
