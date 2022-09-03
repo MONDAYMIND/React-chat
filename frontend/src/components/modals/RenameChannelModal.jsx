@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Button, Modal, Form } from 'react-bootstrap';
 import i18next from 'i18next';
 import { useTranslation } from 'react-i18next';
@@ -9,18 +9,27 @@ import filter from 'leo-profanity';
 import { useFormik } from 'formik';
 import { useSocket } from '../../hooks/index.js';
 import { getChannels } from '../../slices/channelsSlice.js';
+import {
+  getCurrentModalType,
+  getChannelForModal,
+  actions as userInterfaceActions,
+} from '../../slices/userInterfaceSlice.js';
 
-const RenameChannelModal = ({ onHide, currentChannel }) => {
+const RenameChannelModal = () => {
   const { t } = useTranslation();
   const { renameChannel } = useSocket();
   const inputRef = useRef();
+  const dispatch = useDispatch();
   const [validationErrorKey, setValidationErrorKey] = useState(null);
   const [disabled, setDisabled] = useState(false);
-  const notifyChannelRenamed = () => toast.success(t('modals.channelRenamed'));
+
+  const isModalShown = !!useSelector(getCurrentModalType);
+  const channel = useSelector(getChannelForModal);
   const allChannels = useSelector(getChannels);
   const allChannelsNames = allChannels.map((channel) => channel.name);
   const currentLanguage = i18next.logger.options.lng;
   const obsceneWords = filter.getDictionary(currentLanguage);
+  const notifyChannelRenamed = () => toast.success(t('modals.channelRenamed'));
 
   useEffect(() => {
     inputRef.current.focus();
@@ -39,16 +48,16 @@ const RenameChannelModal = ({ onHide, currentChannel }) => {
 
   const formik = useFormik({
     initialValues: {
-      name: currentChannel.name,
+      name: channel.name,
     },
     onSubmit: async (values) => {
       setDisabled(true);
       try {
         await validationSchema.validate(values);
         setValidationErrorKey(null);
-        renameChannel({ ...currentChannel, name: values.name });
+        renameChannel({ ...channel, name: values.name });
         formik.resetForm();
-        onHide();
+        dispatch(userInterfaceActions.hideModal());
         notifyChannelRenamed();
       } catch (err) {
         setValidationErrorKey(err.message);
@@ -59,8 +68,8 @@ const RenameChannelModal = ({ onHide, currentChannel }) => {
 
   return (
     <Modal
-      show
-      onHide={onHide}
+      show={isModalShown}
+      onHide={() => dispatch(userInterfaceActions.hideModal())}
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
@@ -86,7 +95,13 @@ const RenameChannelModal = ({ onHide, currentChannel }) => {
             <Form.Control.Feedback type="invalid">{t(validationErrorKey)}</Form.Control.Feedback>
           </Form.Group>
           <div className="d-flex justify-content-end">
-            <Button variant="secondary" className="me-2" onClick={onHide}>{t('modals.canceling')}</Button>
+            <Button
+              variant="secondary"
+              className="me-2"
+              onClick={() => dispatch(userInterfaceActions.hideModal())}
+            >
+              {t('modals.canceling')}
+            </Button>
             <Button type="submit" variant="primary" disabled={disabled}>{t('modals.sendChannel')}</Button>
           </div>
         </Form>

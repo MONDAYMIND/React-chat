@@ -1,13 +1,13 @@
 import store from './slices/index.js';
 import { actions as channelsActions } from './slices/channelsSlice.js';
 import { actions as messagesActions } from './slices/messagesSlice.js';
-import { setCurrentChannelId } from './slices/userInterfaceSlice.js';
+import { actions as userInterfaceActions } from './slices/userInterfaceSlice.js';
 
 const initSocketApi = (socket) => {
   const addNewChannel = (channel) => socket.emit('newChannel', channel, (response) => {
     const { status, data } = response;
     if (status === 'ok') {
-      store.dispatch(setCurrentChannelId(data.id));
+      store.dispatch(userInterfaceActions.setCurrentChannelId(data.id));
     } else {
       console.log(response.status);
     }

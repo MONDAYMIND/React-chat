@@ -23,18 +23,19 @@ const channelsSlice = createSlice({
     updateChannel: channelsAdapter.updateOne,
     removeChannel: channelsAdapter.removeOne,
   },
-    extraReducers: (builder) => {
-      builder
-        .addCase(fetchContent.fulfilled, (state, action) => {
-          const { channels } = action.payload;
-          channelsAdapter.setAll(state, channels);
-          state.fetchingError = null;
-          state.status = null;
-        })
-        .addCase(fetchContent.rejected, (state, action) => {
-          console.log(action.error);
-          state.fetchingError = action.error;
-        });
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchContent.fulfilled, (state, action) => {
+        const { channels } = action.payload;
+        channelsAdapter.setAll(state, channels);
+        state.fetchingError = null;
+        state.status = 'fulfilled';
+      })
+      .addCase(fetchContent.rejected, (state, action) => {
+        console.log(action.error);
+        state.fetchingError = action.error;
+        state.status = 'rejected';
+      });
   },
 });
 
@@ -43,3 +44,4 @@ export default channelsSlice.reducer;
 const selectors = channelsAdapter.getSelectors((state) => state.channels);
 export const getChannels = (state) => selectors.selectAll(state);
 export const fetchingError = (state) => state.channels.fetchingError;
+export const fetchingStatus = (state) => state.channels.status;

@@ -1,15 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Dropdown, Button, ButtonGroup,
 } from 'react-bootstrap';
-import { getCurrentChannelId } from '../slices/userInterfaceSlice.js';
+import { getCurrentChannelId, actions as userInterfaceActions } from '../slices/userInterfaceSlice.js';
 
-const ChatSelectionButton = ({
-  channel, switchChannel, setCurrentModalEvent, setModalShow,
-}) => {
+const ChatSelectionButton = ({ channel, switchChannel }) => {
   const { id, name, removable } = channel;
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const currentChannelId = useSelector(getCurrentChannelId);
   const variant = id === currentChannelId ? 'secondary' : 'none';
@@ -35,19 +34,15 @@ const ChatSelectionButton = ({
       </Dropdown.Toggle>
       <Dropdown.Menu>
         <Dropdown.Item
-          eventKey="remove"
           onClick={() => {
-            setCurrentModalEvent({ event: 'remove', channel });
-            setModalShow(true);
+            dispatch(userInterfaceActions.setCurrentModal({ type: 'remove', channel }));
           }}
         >
           {t('chat.removeChannel')}
         </Dropdown.Item>
         <Dropdown.Item
-          eventKey="rename"
           onClick={() => {
-            setCurrentModalEvent({ event: 'rename', channel });
-            setModalShow(true);
+            dispatch(userInterfaceActions.setCurrentModal({ type: 'rename', channel }));
           }}
         >
           {t('chat.renameChannel')}

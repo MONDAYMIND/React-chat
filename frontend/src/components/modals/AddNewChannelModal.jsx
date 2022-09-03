@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Button, Modal, Form } from 'react-bootstrap';
 import i18next from 'i18next';
 import { useTranslation } from 'react-i18next';
@@ -10,13 +10,17 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useSocket } from '../../hooks/index.js';
 import { getChannels } from '../../slices/channelsSlice.js';
+import { getCurrentModalType, actions as userInterfaceActions } from '../../slices/userInterfaceSlice.js';
 
-const AddNewChannelModal = ({ onHide }) => {
+const AddNewChannelModal = () => {
   const { t } = useTranslation();
   const { addNewChannel } = useSocket();
   const inputRef = useRef();
+  const dispatch = useDispatch();
   const [validationErrorKey, setValidationErrorKey] = useState(null);
   const [disabled, setDisabled] = useState(false);
+
+  const isModalShown = !!useSelector(getCurrentModalType);
   const allChannels = useSelector(getChannels);
   const allChannelsNames = allChannels.map((channel) => channel.name);
   const currentLanguage = i18next.logger.options.lng;
@@ -49,7 +53,7 @@ const AddNewChannelModal = ({ onHide }) => {
         setValidationErrorKey(null);
         addNewChannel(values);
         formik.resetForm();
-        onHide();
+        dispatch(userInterfaceActions.hideModal());
         notifyChannelAdd();
       } catch (err) {
         setValidationErrorKey(err.message);
@@ -60,8 +64,8 @@ const AddNewChannelModal = ({ onHide }) => {
 
   return (
     <Modal
-      show
-      onHide={onHide}
+      show={isModalShown}
+      onHide={() => dispatch(userInterfaceActions.hideModal())}
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
@@ -87,7 +91,13 @@ const AddNewChannelModal = ({ onHide }) => {
             <Form.Control.Feedback type="invalid">{t(validationErrorKey)}</Form.Control.Feedback>
           </Form.Group>
           <div className="d-flex justify-content-end">
-            <Button variant="secondary" className="me-2" onClick={onHide}>{t('modals.canceling')}</Button>
+            <Button
+              variant="secondary"
+              className="me-2"
+              onClick={() => dispatch(userInterfaceActions.hideModal())}
+            >
+              {t('modals.canceling')}
+            </Button>
             <Button type="submit" variant="primary" disabled={disabled}>{t('modals.sendChannel')}</Button>
           </div>
         </Form>
