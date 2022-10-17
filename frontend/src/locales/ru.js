@@ -1,6 +1,6 @@
 export default {
   translation: {
-    navigationTitle: 'Hexlet Chat',
+    navigationTitle: 'Связи',
     loading: 'Загрузка...',
     login: {
       username: 'Ваш ник',

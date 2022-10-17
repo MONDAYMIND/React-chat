@@ -1,2 +1,29 @@
 @import '~bootstrap/scss/bootstrap';
 @import '~react-toastify/dist/ReactToastify.css';
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@100;300;400&display=swap');
+
+@font-face {
+  font-family: AutopromPro Rounded Light;
+  src: url("./fonts/AutopromPro-Thin.otf") format("opentype");
+}
+
+body {
+  font-family: 'Alegreya Sans', sans-serif;
+  font-weight: 400;
+}
+
+nav, h1 {
+  font-family: AutopromPro Rounded Light;
+  text-transform: uppercase;
+}
+
+.navbar-brand {
+  font-size: 26px;
+}
+
+.channels {
+  font-weight: 400;
+  font-size: 24px;
+  text-transform: uppercase;
+}
+

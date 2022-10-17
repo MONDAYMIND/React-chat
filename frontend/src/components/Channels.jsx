@@ -24,10 +24,10 @@ const Channels = () => {
   return (
     <Col xs={4} md={2} className="border-end pt-5 px-0 bg-light">
       <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
-        <span>{t('chat.channels')}</span>
+        <span className="channels">{t('chat.channels')}</span>
         <button
           type="button"
-          className="p-0 text-primary btn btn-group-vertical border-0"
+          className="p-0 text-success btn btn-group-vertical border-0"
           onClick={() => dispatch(userInterfaceActions.setCurrentModal({ type: 'add', channel: null }))}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="20" height="20" fill="currentColor">

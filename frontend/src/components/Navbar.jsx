@@ -13,7 +13,7 @@ const Navbar = () => {
     <BootstrapNavbar bg="white" expand="lg" className="shadow-sm">
       <div className="container">
         <BootstrapNavbar.Brand as={Link} to={routes.chatPagePath()}>{t('navigationTitle')}</BootstrapNavbar.Brand>
-        {!!user && <Button onClick={logOut}>{t('logout')}</Button>}
+        {!!user && <Button variant="outline-success" onClick={logOut}>{t('logout')}</Button>}
       </div>
     </BootstrapNavbar>
   );

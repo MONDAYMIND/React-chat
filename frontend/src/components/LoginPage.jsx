@@ -9,7 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useAuth } from '../hooks/index.js';
 import routes from '../routes.js';
-import avatarImage from '../assets/avatar.jpg';
+import avatarImage from '../assets/chat.png';
 
 const LoginPage = () => {
   const { logIn } = useAuth();
@@ -81,6 +81,8 @@ const LoginPage = () => {
                   src={avatarImage}
                   className="rounded-circle"
                   alt={t('login.header')}
+                  width="300px"
+                  height="300px"
                 />
               </div>
               <Form onSubmit={formik.handleSubmit} className="col-12 col-md-6 mt-3 mt-mb-0">
@@ -118,7 +120,7 @@ const LoginPage = () => {
                 </Form.Group>
                 <Button
                   type="submit"
-                  variant="outline-primary"
+                  variant="outline-success"
                   className={btnClassNames}
                 >
                   {t('login.submit')}
@@ -129,7 +131,7 @@ const LoginPage = () => {
               <div className="text-center">
                 <span>{t('login.newToChat')}</span>
                 {' '}
-                <a href={routes.signupPagePath()}>{t('login.signup')}</a>
+                <a className="text-success" href={routes.signupPagePath()}>{t('login.signup')}</a>
               </div>
             </div>
           </div>

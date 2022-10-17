@@ -9,7 +9,7 @@ import * as yup from 'yup';
 import classNames from 'classnames';
 import { useAuth } from '../hooks/index.js';
 import routes from '../routes.js';
-import avatarImage from '../assets/avatar_1.jpg';
+import avatarImage from '../assets/signup.png';
 
 const SignupPage = () => {
   const { logIn } = useAuth();
@@ -80,6 +80,8 @@ const SignupPage = () => {
                   src={avatarImage}
                   className="rounded-circle"
                   alt={t('login.header')}
+                  width="250px"
+                  height="250px"
                 />
               </div>
               <Formik
